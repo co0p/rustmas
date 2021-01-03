@@ -4,6 +4,7 @@ use std::fs::File;
 use std::path::Path;
 use std::string::String;
 
+
 pub fn solve() {
         // read file line by line
         let mut counter = 1;
@@ -20,16 +21,34 @@ pub fn solve() {
 	println!("calling solve {}", valid("1-2 a: abcde".to_string()));
 }
 
-pub fn valid(candidate: String) -> bool {
+fn get_string_from_option(opt: Option<&str>) -> String {
+	return String::from(opt.unwrap());
+}
+
+fn valid(candidate: String) -> bool {
 
     // split into range, char and pwd to check
-
+    let mut tokens = candidate.split_whitespace();
+    //let range  = get_string_from_option(tokens.next()).split("-");
+    let s1  = tokens.next();
+    let mut range = s1.unwrap().split("-");
+    let lower  = get_string_from_option(range.next()).parse::<i32>().unwrap();
+    let upper  = get_string_from_option(range.next()).parse::<i32>().unwrap();
+    let mut letter = get_string_from_option(tokens.next()); 
+    letter.pop();  // drop ':'
+    let pwd = get_string_from_option(tokens.next());
+         
     // count char in pwd to check
-
+    let mut char_count = 0;
+    for c in pwd.chars() {
+	  let s = String::from(c);
+	  if letter == s {
+	    char_count +=1;
+      }
+	} 
+	
     // return if is count inside range
-
-    print!("{}", candidate);
-	return true
+    return char_count >= lower && char_count <= upper;   
 }
 
 
