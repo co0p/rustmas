@@ -17,11 +17,17 @@ pub fn solve() {
                 }
             }
         }
-
 	println!("calling solve {}", valid("1-2 a: abcde".to_string()));
 }
 
-fn valid(candidate: String) -> bool {
+pub fn valid(candidate: String) -> bool {
+
+    // split into range, char and pwd to check
+
+    // count char in pwd to check
+
+    // return if is count inside range
+
     print!("{}", candidate);
 	return true
 }
@@ -33,4 +39,46 @@ where
 {
     let file = File::open(filename)?;
     Ok(io::BufReader::new(file).lines())
+}
+
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_validate_count_below() {
+        let candidate = String::from("2-4 a: bbbabbb");
+        let res = valid(candidate);
+        assert_eq!(res, false)
+    }
+
+    #[test]
+    fn test_validate_count_lower_bound() {
+        let candidate = String::from("2-4 a: bbbaabbb");
+        let res = valid(candidate);
+        assert_eq!(res, true)
+    }
+
+    #[test]
+    fn test_validate_count_inside() {
+        let candidate = String::from("2-4 a: bbbaaabbb");
+        let res = valid(candidate);
+        assert_eq!(res, true)
+    }
+
+    #[test]
+    fn test_validate_count_upper_bound() {
+        let candidate = String::from("2-4 a: bbbaaaabbb");
+        let res = valid(candidate);
+        assert_eq!(res, true)
+    }
+    
+    #[test]
+    fn test_validate_count_above() {
+        let candidate = String::from("2-4 a: bbbaaaaaaabbb");
+        let res = valid(candidate);
+        assert_eq!(res, false)
+    }
+
 }
