@@ -20,7 +20,7 @@ pub fn solve() {
 }
 
 fn get_string_from_option(opt: Option<&str>) -> String {
-    return String::from(opt.unwrap());
+    String::from(opt.unwrap())
 }
 
 fn valid(candidate: String) -> bool {
@@ -43,7 +43,7 @@ fn valid(candidate: String) -> bool {
         }
     }
 
-    return char_count >= lower && char_count <= upper;
+    char_count >= lower && char_count <= upper
 }
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>

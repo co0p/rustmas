@@ -21,7 +21,7 @@ pub fn solve() {
 }
 
 fn get_string_from_option(opt: Option<&str>) -> String {
-    return String::from(opt.unwrap());
+    String::from(opt.unwrap())
 }
 
 
@@ -46,7 +46,7 @@ fn valid_password(candidate : Candidate) -> bool {
         return true;
     }
 
-    return false;
+    false
 }
 
 
@@ -60,7 +60,7 @@ fn extract(line: String) -> Candidate {
 
     let pwd = get_string_from_option(tokens.next());
 
-    return Candidate { first: lower, second: upper, c: letter, pwd: pwd }
+    Candidate { first: lower, second: upper, c: letter, pwd: pwd }
 }
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
