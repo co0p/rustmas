@@ -195,8 +195,6 @@ mod tests_toboggan {
                        String::from(".#....#..#.")]),
         };
 
-
-
         let mut t = Toboggan {
             map: forest,
             velocity: Position { x: 3, y: 1 },
@@ -267,6 +265,57 @@ pub fn solve() {
     };
     
     println!("{}", t.travel());
+}
+
+pub fn solve_two() {
+    let forest1 = ForestMap { map: read_map("input_day03.txt") };
+    let forest2 = ForestMap { map: read_map("input_day03.txt") };
+    let forest3 = ForestMap { map: read_map("input_day03.txt") };
+    let forest4 = ForestMap { map: read_map("input_day03.txt") };
+    let forest5 = ForestMap { map: read_map("input_day03.txt") };
+    
+    let mut t1 = Toboggan {
+        map: forest1,
+        velocity: Position { x: 1, y: 1 },
+        current_pos: Position { x: 0, y: 0 },
+        tree_count: 0,
+    };
+    
+    let mut t2 = Toboggan {
+        map: forest2,
+        velocity: Position { x: 3, y: 1 },
+        current_pos: Position { x: 0, y: 0 },
+        tree_count: 0,
+    };
+    
+    let mut t3 = Toboggan {
+        map: forest3,
+        velocity: Position { x: 5, y: 1 },
+        current_pos: Position { x: 0, y: 0 },
+        tree_count: 0,
+    };
+
+    let mut t4 = Toboggan {
+        map: forest4,
+        velocity: Position { x: 7, y: 1 },
+        current_pos: Position { x: 0, y: 0 },
+        tree_count: 0,
+    };
+
+    let mut t5 = Toboggan {
+        map: forest5,
+        velocity: Position { x: 1, y: 2 },
+        current_pos: Position { x: 0, y: 0 },
+        tree_count: 0,
+    };
+    
+    println!("{}",   t1.travel() 
+                   * t2.travel() 
+                   * t3.travel() 
+                   * t4.travel() 
+                   * t5.travel());
+    
+    
 }
 
 /***************************************
