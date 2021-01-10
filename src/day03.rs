@@ -144,19 +144,21 @@ struct Toboggan {
 
 impl Toboggan {
     // travel travels the map until end of the forest and returns the trees encoutered
-    fn travel(&self) -> u32 {
-        self.tree_count
+    fn travel(&mut self) -> u32 {
+		assert!(self.velocity.y > 0);
+		
+		while self.map.still_inside(self.current_pos) {
+			if self.map.is_tree(self.current_pos) {
+               self.tree_count += 1;
+            }
+			self.slide()
+		}
+		self.tree_count
     }
 
     // slide to the next position
     fn slide(&mut self) {
-
-        let next = self.current_pos + self.velocity;
-        if self.map.is_tree(next) {
-            self.tree_count += 1;
-        }
-
-        self.current_pos = next;
+        self.current_pos = self.current_pos + self.velocity;
     }
 }
 
@@ -184,24 +186,71 @@ mod tests_toboggan {
         assert_eq!(t.current_pos.x, expected.x);
         assert_eq!(t.current_pos.y, expected.y);
     }
-
+    
     #[test]
-    fn test_slide_increases_tree_count() {
+    fn test_travel_trees() {
         let forest = ForestMap {
-            map: (vec![String::from("......"), String::from("..#...")]),
+            map: (vec![String::from("..##......."), 
+                       String::from("#...#...#.."),
+                       String::from(".#....#..#.")]),
         };
+
+
 
         let mut t = Toboggan {
             map: forest,
-            velocity: Position { x: 2, y: 1 },
+            velocity: Position { x: 3, y: 1 },
             current_pos: Position { x: 0, y: 0 },
             tree_count: 0,
         };
 
-        t.slide();
+        assert_eq!(t.travel(), 1)
+	}
 
-        assert_eq!(t.tree_count, 1)
-    }
+    #[test]
+    fn test_travel_no_trees() {
+        let forest = ForestMap {
+            map: (vec![String::from("......"), 
+                       String::from("..#..."),
+                       String::from(".....#")]),
+        };
+
+        let mut t = Toboggan {
+            map: forest,
+            velocity: Position { x: 1, y: 1 },
+            current_pos: Position { x: 0, y: 0 },
+            tree_count: 0,
+        };
+
+        assert_eq!(t.travel(), 0)
+	}
+	
+    #[test]
+    fn test_travel_final() {
+        let forest = ForestMap {
+            map: (vec![String::from("..##......."), 
+                       String::from("#...#...#.."),
+                       String::from(".#....#..#."),
+                       String::from("..#.#...#.#"),
+                       String::from(".#...##..#."),
+                       String::from("..#.##....."),
+                       String::from(".#.#.#....#"),
+                       String::from(".#........#"),
+                       String::from("#.##...#..."),
+                       String::from("#...##....#"),
+                       String::from(".#..#...#.#")]),
+        };
+
+        let mut t = Toboggan {
+            map: forest,
+            velocity: Position { x: 3, y: 1 },
+            current_pos: Position { x: 0, y: 0 },
+            tree_count: 0,
+        };
+
+        assert_eq!(t.travel(), 7)
+	}
+	
 }
 
 // entrypoint from main.rs
@@ -210,12 +259,14 @@ pub fn solve() {
         map: read_map("input_day03.txt"),
     };
 
-    let t = Toboggan {
+    let mut t = Toboggan {
         map: forest,
         velocity: Position { x: 3, y: 1 },
         current_pos: Position { x: 0, y: 0 },
         tree_count: 0,
     };
+    
+    println!("{}", t.travel());
 }
 
 /***************************************
