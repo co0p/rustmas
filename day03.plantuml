@@ -1,0 +1,28 @@
+@startuml
+class ForestMap {
+   ForestMap(Integer[String])
+   Integer[String] map 
+   +Boolean isTree(Position)
+   +Boolean stillInside(Position)
+}
+
+class Toboggan {
+   Toboggan(map, vX, vY)
+   ForestMap map
+   Integer vX
+   Integer vY
+   Position current
+   Integer treeCount
+   void slide()
+   +Integer startTravel()
+}
+
+class Position {
+   +Integer x
+   +Integer y
+}
+
+Toboggan -- Position
+ForestMap -- Position
+Toboggan "1" *- ForestMap
+@enduml
