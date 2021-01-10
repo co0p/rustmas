@@ -5,6 +5,7 @@ use std::path::Path;
 use std::string::String;
 
 // hold the x,y position
+// ? #[readonly::make]
 struct Position {
     x: usize,
     y: usize,
@@ -17,8 +18,15 @@ struct ForestMap {
 
 impl ForestMap {
     fn is_tree(&self, pos: Position) -> bool {
+		assert!(self.still_inside(Position{x: pos.x, y: pos.y}));
+		
         let line = &self.map[pos.y];
-        return line.chars().nth(pos.x).unwrap() == String::from("#").chars().nth(0).unwrap();
+        let line_len = line.chars().count();
+        line.chars().nth(pos.x % line_len).unwrap() == String::from("#").chars().nth(0).unwrap()
+    }
+    
+    fn still_inside(&self, pos: Position) -> bool {
+		pos.y < self.map.len()
     }
 }
 
@@ -36,15 +44,7 @@ fn read_map(path: &str) -> Vec<String> {
     the_map
 }
 
-/*
-#### map does extend to the right
-....#......#..  ->  tree (0,11)
 
-#### stillInside: (0,0) -> true, (0,1000) -> true, (2,0)->true, (3,0) -> false
-....#..
-....#..
-....#..
-*/
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -68,6 +68,49 @@ mod tests {
         };
         assert_eq!(f.is_tree(p), false)
     }
+    
+    // ....#......#..  ->  tree (0,11)
+    #[test]
+    fn test_map_extend_to_the_right() {
+        let p = Position { x: 8, y: 0 };
+        let f = ForestMap {
+            map: (vec![String::from("..#...")]),
+        };
+        assert_eq!(f.is_tree(p), true)
+    } 
+
+   #[test]
+   fn test_still_inside_returns_true_on_border() {
+       let p = Position { x: 20, y: 2 };
+       let f = ForestMap {
+           map: (vec![String::from("..#..."),
+                      String::from("..#..."),
+                      String::from("..#...")]),
+       };
+       assert_eq!(f.still_inside(p), true)
+   } 
+   
+   #[test]
+   fn test_still_inside_returns_true_inside_border() {
+       let p = Position { x: 20, y: 1 };
+       let f = ForestMap {
+           map: (vec![String::from("..#..."),
+                      String::from("..#..."),
+                      String::from("..#...")]),
+       };
+       assert_eq!(f.still_inside(p), true)
+   } 
+   
+   #[test]
+   fn test_still_inside_returns_false_outside_border() {
+       let p = Position { x: 20, y: 3 };
+       let f = ForestMap {
+           map: (vec![String::from("..#..."),
+                      String::from("..#..."),
+                      String::from("..#...")]),
+       };
+       assert_eq!(f.still_inside(p), false)
+   } 
 }
 
 // entrypoint from main.rs
@@ -75,9 +118,9 @@ pub fn solve() {
     let lines = read_map("input_day03.txt");
     let forest = ForestMap { map: (lines) };
     let p = Position { x: 0, y: 0 };
-    let treeFound = forest.is_tree(p);
+    let tree_found = forest.is_tree(p);
 
-    println!("it is a tree at position (0,0) : {}", treeFound);
+    println!("it is a tree at position (0,0) : {}", tree_found);
 }
 
 // most important helper function to get data from file
