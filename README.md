@@ -11,5 +11,5 @@ run the code
 
  - install rust
  - checkout code
- - execute ```cargo test```` to run tests. 
- - execute ```cargo run```` to run the main.rs file. 
+ - execute ```cargo test``` to run tests. 
+ - execute ```cargo run``` to run the main.rs file. 
